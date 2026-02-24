@@ -3,7 +3,7 @@
 // @namespace    https://github.com/Xab-Aras/geofs-control-profiles
 // @version      1.0.0
 // @description  Save and switch multiple control/joystick profiles in GeoFS by storing settings snapshots in localStorage.
-// @author       <TUO-NOME>
+// @author       Xabaras
 // @match        *://geo-fs.com/*
 // @match        *://www.geo-fs.com/*
 // @downloadURL  https://raw.githubusercontent.com/Xab-Aras/geofs-control-profiles/main/geofs-control-profiles.user.js
