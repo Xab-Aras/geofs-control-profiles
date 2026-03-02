@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GeoFS Control Profiles
 // @namespace    https://github.com/Xab-Aras/geofs-control-profiles
-// @version      1.0.0
+// @version      1.0.1
 // @description  Save and switch multiple control/joystick profiles in GeoFS by storing settings snapshots in localStorage.
 // @author       Xabaras
 // @match        *://geo-fs.com/*
@@ -117,6 +117,17 @@
     panel.style.fontFamily = 'system-ui, -apple-system, Segoe UI, Roboto, sans-serif';
     panel.style.userSelect = 'none';
     panel.style.overflow = 'hidden';
+  
+    // Prevent GeoFS global keyboard shortcuts while typing in the panel
+panel.addEventListener('keydown', (e) => {
+  e.stopPropagation();
+});
+panel.addEventListener('keyup', (e) => {
+  e.stopPropagation();
+});
+panel.addEventListener('keypress', (e) => {
+  e.stopPropagation();
+});
 
     const header = document.createElement('div');
     header.style.padding = '10px 12px';
@@ -366,7 +377,15 @@
   }
 
   // Wait for GeoFS page to be usable
-  window.addEventListener('load', () => {
-    setTimeout(createUI, 2500);
-  });
+function waitForGeoFS() {
+  if (typeof localStorage.getItem('settings') === 'string') {
+    if (!document.getElementById('gcp_panel')) {
+      createUI();
+    }
+  } else {
+    setTimeout(waitForGeoFS, 1000);
+  }
+}
+
+window.addEventListener('load', waitForGeoFS);
 })();
