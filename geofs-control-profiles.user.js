@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GeoFS Control Profiles
 // @namespace    https://github.com/Xab-Aras/geofs-control-profiles
-// @version      1.1.0
+// @version      1.1.2
 // @description  Save and switch multiple control/joystick profiles in GeoFS by storing settings snapshots in localStorage.
 // @author       Xabaras
 // @match        *://geo-fs.com/*
@@ -102,7 +102,14 @@
 
   function createUI() {
     const uiState = loadUIState();
+// Ensure panel position stays within screen bounds
+if (uiState.x !== null && uiState.y !== null) {
+  const maxX = window.innerWidth - 300;
+  const maxY = window.innerHeight - 100;
 
+  if (uiState.x < 0 || uiState.x > maxX) uiState.x = null;
+  if (uiState.y < 0 || uiState.y > maxY) uiState.y = null;
+}
     const panel = document.createElement('div');
     panel.id = 'gcp_panel';
     panel.style.position = 'fixed';
@@ -218,7 +225,7 @@ panel.addEventListener('keypress', (e) => {
     actions.style.gap = '8px';
 
     const loadBtn = document.createElement('button');
-    loadBtn.textContent = 'Load & Reload';
+    loadBtn.textContent = 'Apply Profile';
     const delBtn = document.createElement('button');
     delBtn.textContent = 'Delete';
     const exportBtn = document.createElement('button');
