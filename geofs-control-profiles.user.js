@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         GeoFS Control Profiles
 // @namespace    https://github.com/Xab-Aras/geofs-control-profiles
-// @version      1.0.1
+// @version      1.1.0
 // @description  Save and switch multiple control/joystick profiles in GeoFS by storing settings snapshots in localStorage.
 // @author       Xabaras
 // @match        *://geo-fs.com/*
@@ -40,6 +40,7 @@
     for (let i = 0; i < localStorage.length; i++) {
       const k = localStorage.key(i);
       if (!k || !k.startsWith(STORE_PREFIX)) continue;
+      if (k.endsWith('__meta')) continue;
       const name = k.slice(STORE_PREFIX.length);
       const metaRaw = safeGet(`${k}__meta`);
       let meta = {};
@@ -284,17 +285,29 @@ panel.addEventListener('keypress', (e) => {
     };
 
     loadBtn.onclick = () => {
-      const key = select.value;
-      if (!key) return toast('Select a profile first.', true);
+  const key = select.value;
+  if (!key) return toast('Select a profile first.', true);
 
-      const profile = safeGet(key);
-      if (!profile) return toast('Profile not found.', true);
+  const profile = safeGet(key);
+  if (!profile) return toast('Profile not found.', true);
 
-      if (!safeSet(APP_KEY, profile)) return toast('Failed to apply profile.', true);
+  try {
+    const parsed = JSON.parse(profile);
 
-      toast('Profile applied. Reloading…');
-      location.reload();
-    };
+    // Update runtime preferences
+    geofs.preferences = parsed;
+    geofs.setPreferenceValues();
+    geofs.setInputHandlers();
+
+    // Optional: also sync localStorage for persistence
+    safeSet(APP_KEY, profile);
+
+    toast('Profile applied instantly.');
+  } catch (err) {
+    console.error(err);
+    toast('Error applying profile.', true);
+  }
+};
 
     delBtn.onclick = () => {
       const key = select.value;
