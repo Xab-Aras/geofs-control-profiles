@@ -10,7 +10,7 @@ Save and switch multiple GeoFS control/joystick profiles using Tampermonkey.
 
 ## Usage
 - Type a profile name and click **Save**
-- Select a profile and click **Load & Reload**
+- Select a profile and click **Apply Profile**
 - **Export JSON** copies the profile settings to clipboard
 
 ## Notes
